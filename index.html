@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" media="screen" href="./css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>Bicycle Counter Dashboard</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.standalone.min.css" integrity="sha512-p4vIrJ1mDmOVghNMM4YsWxm0ELMJ/T0IkdEvrkNHIcgFsSzDi/fV7YxzTzb3mnMvFPawuIyIrHcpxClauEfpQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <h1>Bike Traffic Dashboard</h1>
+
+    <div class="container">
+        
+        <div class="input-daterange input-group" id="datepicker">
+            Select date range:
+            <input type="text" class="input-sm form-control" name="start" value="2022-08-26"/>
+            <span class="input-group-addon">to</span>
+            <input type="text" class="input-sm form-control" name="end" value="2022-11-19"/>
+        </div>
+    
+        <div id="chart"></div>
+
+    </div>
+
+    <script src="./js/datepicker.js"></script>
+    <script src="./js/linechart.js"></script>
+
+</body>
+</html>
