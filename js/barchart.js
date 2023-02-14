@@ -30,7 +30,7 @@ const parseDate = d3.timeParse("%Y-%m-%d");
 
 function updateChart(){
 
-  d3.selectAll(".bar, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
+  d3.selectAll("rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
 
 
 // get the data
