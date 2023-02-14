@@ -1,6 +1,6 @@
 // set chart dimensions and margins
 const width = 800, 
-      height = 400, 
+      height = 400,
       margin = {top: 20, right: 50, bottom: 100, left: 60};
 
 const innerWidth = width - margin.left - margin.right, 
@@ -78,7 +78,7 @@ svg.selectAll("bar")
         .attr("y", function(d) {
            return yScale(d.total);
          })
-        .attr("width", width/data.length)
+        .attr("width", ((width/data.length) - (0.15 * width/data.length)))
         .attr("height", function(d) {
             return innerHeight - yScale(d.total);
           })
