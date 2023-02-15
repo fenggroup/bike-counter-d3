@@ -83,7 +83,7 @@ svg.selectAll("bar")
             return innerHeight - yScale(d.total);
           })
          .attr("fill", function(d) {
-           return "rgb(0, 0, " + Math.round(d.total * 10) + ")";
+           return "rgb(91, 121, 28)";
          });
 
 
