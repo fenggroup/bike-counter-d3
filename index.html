@@ -24,13 +24,25 @@
             <input type="text" class="input-sm form-control" name="end" value="2022-11-19"/>
         </div>
     
-        <p>
+        <form>
             Traffic direction: 
-            <input type="radio" name="filterPreset" value="both" checked="true"> Both
-            <input type="radio" name="filterPreset" value="north"> Northbound only
-            <input type="radio" name="filterPreset" value="south"> Southbound only
-        </p>
+            <label><input type="radio" name="filterPreset" value="both" checked="true"> Both</label>
+            <label><input type="radio" name="filterPreset" value="north"> Northbound only</label>
+            <label><input type="radio" name="filterPreset" value="south"> Southbound only</label>
+        </form>
+
+        <form>
+            Select data resolution: 
+            <label></label><input type="radio" name="filterPreset" value="monthly"> monthly</label>
+            <label></label><input type="radio" name="filterPreset" value="weekly"> weekly</label>
+            <label></label><input type="radio" name="filterPreset" value="daily" checked="true"> daily</label>
+            <label></label><input type="radio" name="filterPreset" value="hourly"> hourly</label>
+            <label></label><input type="radio" name="filterPreset" value="30min"> 30 min</label>
+            <label></label><input type="radio" name="filterPreset" value="15min"> 15 min</label>
+        </form>
       
+        <h2>Bike traffic by date & time</h2>
+
         <div id="chart"></div>
 
     </div>
