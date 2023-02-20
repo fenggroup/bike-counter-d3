@@ -1,0 +1,34 @@
+[
+    {
+        "site_url": "/annarbor-1",
+        "site_title": "Ann Arbor Division Street Bikeway",
+        "data_file_name": "counter-data-annarbor-2022.csv",
+        "weather_file_name": "weather-noaa-annarbor.csv",
+        "note_file_name": "notes-annarbor.csv",
+        "config_direction": {
+            "in": "Northbound",
+            "out": "Southbound"
+        },
+        "date_range": [
+            "2022-08-26",
+            "2022-11-19"
+        ],
+        "default_res": "1_day"
+    },
+    {
+        "site_url": "/dearborn-1",
+        "site_title": "Dearborn Rouge Getaway Trail",
+        "data_file_name": "bike_data_dearborn.xlsx",
+        "weather_file_name": "weather-noaa-dearborn.csv",
+        "note_file_name": "notes-dearborn.csv",
+        "config_direction": {
+            "in": "Eastbound",
+            "out": "Westbound"
+        },
+        "date_range": [
+            "2022-06-15",
+            "2022-07-19"
+        ],
+        "default_res": "1_day"
+    }
+]
