@@ -87,7 +87,7 @@ Promise.all([
 
     // uses the default mode of reading in data for these time series
     if (timeSelection == "daily" || timeSelection == "hourly" || 
-    timeSelection == "30mins" || timeSelection == "15mins") {
+    timeSelection == "30min" || timeSelection == "15min") {
       data = data.filter(function(d) {
         return parseDate(start_date) <= d.parsedDateTime
       });
