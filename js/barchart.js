@@ -4,10 +4,11 @@ const width = 800,
       margin = {top: 20, right: 50, bottom: 100, left: 60};
 
 // set default variables to what is loaded in
+
 var direction = "both";
-var resolution = "date";
 var timeSelection = "daily";
 var fileName = "./data/counter-data-resampled/counter-data-1day.csv";
+var weatherFileName = "weather-noaa-annarbor.csv";
 
 const innerWidth = width - margin.left - margin.right, 
       innerHeight = height - margin.top - margin.bottom;
@@ -40,25 +41,53 @@ function updateChart(){
 
   d3.selectAll("rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
 
+/*
+// for doing weather
+
+Promise.all([
+  d3.csv(fileName),
+  d3.csv(weatherFileName)
+  ]).then(function(data) {
+    if (fileName == "./data/counter-data-resampled/counter-data-1day.csv") {
+      var directionType = "northsouth";
+    }
+
+    var counterData = data[0];
+    var weatherData = data[1];
+
+    weatherData.forEach(function(e) {
+      e.parsedDateTimeWeather = 
+    }
+
+    // format the data
+    counterData.forEach(function(d) {
+      d.parsedDateTime = parseTime(d.date); // adjusts time reading for for 1hour/30min/15min csv
+      d.in = +d.in;
+      d.out = +d.out;
+      d.total = d.in + d.out;
+      d.precipitation = weatherData.find(function(e) {
+        return e.PRCP;
+      })
+    });
+  */
 
 // get the data
   d3.csv(fileName).then(function(data) {
+    if (fileName == "./data/counter-data-resampled/counter-data-1day.csv") {
+      var directionType = "northsouth";
+    }
 
     // format the data
     data.forEach(function(d) {
-      if (resolution == "time") {
-        d.parsedDateTime = parseTime(d.datetime); // adjusts time reading for for 1hour/30min/15min csv
-      }
-      else if (resolution == "date") {
-        d.parsedDateTime = parseDate(d.datetime); // adjusts time reading for 1month/1week/1day csv
-      }
+      d.parsedDateTime = parseTime(d.date); // adjusts time reading for for 1hour/30min/15min csv
       d.in = +d.in;
       d.out = +d.out;
       d.total = d.in + d.out;
     });
 
-    // uses the default mode of reading in data for the daily, hourly, or "minute" values
-    if (resolution == "time" || timeSelection == "daily") {
+    // uses the default mode of reading in data for these time series
+    if (timeSelection == "daily" || timeSelection == "hourly" || 
+    timeSelection == "30mins" || timeSelection == "15mins") {
       data = data.filter(function(d) {
         return parseDate(start_date) <= d.parsedDateTime
       });
@@ -134,11 +163,11 @@ function updateChart(){
       // set the y scale to total
       yScale.domain([0, d3.max(data, d=>d.total)]);
     }
-    else if (direction == "north") {
+    else if (direction == "in") {
       // set the y scale to in
       yScale.domain([0, d3.max(data, d=>d.in)]);
     }
-    else if (direction == "south") {
+    else if (direction == "out") {
       // set the y scale to out
       yScale.domain([0, d3.max(data, d=>d.out)]);
     }
@@ -165,10 +194,10 @@ function updateChart(){
       if (direction == "both") {
         return yScale(d.total);
       }
-      else if (direction == "north") {
+      else if (direction == "in") {
         return yScale(d.in);
       }
-      else if (direction == "south") {
+      else if (direction == "out") {
         return yScale(d.out);
       }
     })
@@ -177,10 +206,10 @@ function updateChart(){
       if (direction == "both") {
         return innerHeight - yScale(d.total);
       }
-      else if (direction == "north") {
+      else if (direction == "in") {
         return innerHeight - yScale(d.in);
       }
-      else if (direction == "south") {
+      else if (direction == "out") {
         return innerHeight - yScale(d.out);
       }
     })
@@ -188,12 +217,54 @@ function updateChart(){
       if (direction == "both") {
         return "rgb(91, 121, 28)";
       }
-      else if (direction == "north") {
+      else if (direction == "in") {
         return "rgb(106, 106, 246)";
       }
-      else if (direction == "south") {
+      else if (direction == "out") {
         return  "rgb(220, 183, 55)";
       }
+    })
+    .append("title")
+    .text(function(d) {
+      var tooltipText = "";
+      if (timeSelection == "daily" || timeSelection == "hourly" || 
+          timeSelection == "15mins" || timeSelection == "30mins") {
+        tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+      }
+      else if (timeSelection == "weekly") {
+        tooltipText += "Week beginning on " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+      }
+      else if (timeSelection == "monthly") {
+        tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "\n";
+      }
+      if (timeSelection == "hourly" || timeSelection == "30mins" || timeSelection == "15mins") {
+        tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "\n";
+      }
+
+      if (direction == "both") {
+        tooltipText += "Count: " + d.total;
+      }
+      else if (direction == "in") {
+        tooltipText += "Count: " + d.in;
+      }
+      else if (direction == "out") {
+        tooltipText += "Count: " + d.out;
+      }
+
+      if (timeSelection == "daily") {
+        if (directionType = "northsouth" && direction == "both") {
+          tooltipText +=  "\nNorthbound: " + d.in;
+          tooltipText += "\nSouthbound: " + d.out;
+        }
+        else if (directionType = "eastwest" && direction == "both") {
+          tooltipText +=  "\nEastbound: " + d.in;
+          tooltipText += "\nWestbound: " + d.out;
+        }
+        tooltipText += "\nTemperature (F): ";
+        tooltipText += "\nPrecipitation: ";
+      }
+
+      return tooltipText;
     });
 
       // add y axis
@@ -219,7 +290,6 @@ function updateChart(){
       .call(d3.axisBottom(xScale));
     }
   });
-
   // add x label
   svg.append("text")
     .attr("class", "axis-label")
@@ -246,13 +316,13 @@ d3.selectAll("input")
     var view = d3.select(this).node().value;
 
     switch (view) {
-      case "north":
-        direction = "north";
+      case "in":
+        direction = "in";
         updateChart();
         break;
       
-      case "south":
-        direction = "south";
+      case "out":
+        direction = "out";
         updateChart();
         break;
       
@@ -263,42 +333,36 @@ d3.selectAll("input")
       
       case "monthly":
         fileName = "./data/counter-data-resampled/counter-data-1month.csv";
-        resolution = "date";
         timeSelection = "monthly";
         updateChart();
         break;
 
       case "weekly":
         fileName = "./data/counter-data-resampled/counter-data-1week.csv";
-        resolution = "date";
         timeSelection = "weekly";
         updateChart();
         break;
 
       case "daily":
         fileName = "./data/counter-data-resampled/counter-data-1day.csv";
-        resolution = "date";
         timeSelection = "daily";
         updateChart();
         break;
 
       case "hourly":
         fileName = "./data/counter-data-resampled/counter-data-1hour.csv";
-        resolution = "time";
         timeSelection = "hourly";
         updateChart();
         break;
 
       case "30min":
         fileName = "./data/counter-data-resampled/counter-data-30min.csv";
-        resolution = "time";
         timeSelection = "30min";
         updateChart();
         break;
 
       case "15min":
         fileName = "./data/counter-data-resampled/counter-data-15min.csv";
-        resolution = "time";
         timeSelection = "15min";
         updateChart();
         break;
