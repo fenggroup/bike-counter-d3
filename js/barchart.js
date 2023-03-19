@@ -16,7 +16,7 @@ const innerWidth = width - margin.left - margin.right,
 // append the svg to the chart
 // append a 'group' element to svg
 // move the 'group' element to the top left margin
-const svg = d3.select("#chart")
+const svg = d3.select("#barchart")
               .append("svg")
                 .attr("width", width)
                 .attr("height", height)
@@ -228,7 +228,7 @@ Promise.all([
     .text(function(d) {
       var tooltipText = "";
       if (timeSelection == "daily" || timeSelection == "hourly" || 
-          timeSelection == "15mins" || timeSelection == "30mins") {
+          timeSelection == "15min" || timeSelection == "30min") {
         tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
       }
       else if (timeSelection == "weekly") {
@@ -237,7 +237,7 @@ Promise.all([
       else if (timeSelection == "monthly") {
         tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "\n";
       }
-      if (timeSelection == "hourly" || timeSelection == "30mins" || timeSelection == "15mins") {
+      if (timeSelection == "hourly" || timeSelection == "30min" || timeSelection == "15min") {
         tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "\n";
       }
 
