@@ -1,7 +1,7 @@
 // set chart dimensions and margins
-const width = 800, 
-      height = 400,
-      margin = {top: 20, right: 50, bottom: 100, left: 60};
+var width = 800, 
+    height = 400,
+    margin = {top: 20, right: 50, bottom: 100, left: 60};
 
 // set default variables to what is loaded in
 
