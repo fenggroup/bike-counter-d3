@@ -91,10 +91,17 @@ Promise.all([
       data = data.filter(function(d) {
         return parseDate(start_date) <= d.parsedDateTime
       });
+
+      var endDateWithTime = new Date(parseDate(end_date));
+      // sets the last bar to be 11:45 pm at the selected day
+      endDateWithTime.setHours(23, 45);
+    
       data = data.filter(function(d) {
-        return d.parsedDateTime <= d3.timeDay.offset(parseDate(end_date), 1)
+        return d.parsedDateTime <= endDateWithTime;
       });
-      xScale.domain(d3.extent(data, d=>d.parsedDateTime));
+
+      // sets the last tic to be the next day at midnight
+      xScale.domain([parseDate(start_date), d3.timeDay.offset(parseDate(end_date), 1)]);
     }
     // adjust the domain and manner of reading data for weekly data
     else if (timeSelection == "weekly") {
@@ -285,10 +292,10 @@ Promise.all([
     }
     else {
       svg.append("g")
-      .attr("class", "x-axis")
-      .attr("transform", "translate(0," + innerHeight + ")")
-      .call(d3.axisBottom(xScale));
-    }
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0," + innerHeight + ")")
+        .call(d3.axisBottom(xScale));
+      }
   });
   // add x label
   svg.append("text")
