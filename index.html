@@ -27,8 +27,8 @@
         <form>
             Traffic direction: 
             <label><input type="radio" name="filterPreset" value="both" checked="true"> Both</label>
-            <label><input type="radio" name="filterPreset" value="north"> Northbound only</label>
-            <label><input type="radio" name="filterPreset" value="south"> Southbound only</label>
+            <label><input type="radio" name="filterPreset" value="in"> Northbound only</label>
+            <label><input type="radio" name="filterPreset" value="out"> Southbound only</label>
         </form>
 
         <form>
@@ -43,12 +43,19 @@
       
         <h2>Bike traffic by date & time</h2>
 
-        <div id="chart"></div>
+        <div id="barchart"></div>
+
+        <h2>Traffic summary on the selected dates</h2>
+
+        <div id="table"></div>
+
+
 
     </div>
 
     <script src="./js/datepicker.js"></script>
     <script src="./js/barchart.js"></script>
+    <script src="./js/table.js"></script>
 
 
 </body>
