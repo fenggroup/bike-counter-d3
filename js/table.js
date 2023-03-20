@@ -9,7 +9,7 @@ console.log("test 15");
 // get the data
 function updateTable() {
     d3.selectAll("table, thead, tbody, tr, td").remove();
-
+    
     d3.csv(tableFile).then(function(data) {
         // format the data
         data.forEach(function(d) {
@@ -66,14 +66,18 @@ function createTable(data) {
     ];
     console.log("test 5");
 
-    var tableContainer = d3.select("#table");
+    var tableContainer = d3.select("#table")
+    
     console.log("test 6");
 
     var table = tableContainer.append("table")
+        .style("margin-left", "auto")
+        .style("margin-right", "auto")
         .style("width", 500 + "px")
         .style("height", 120 + "px")
         .style("border", "1px solid black")
         .style("padding", "5px");
+
     var thead = table.append("thead");
     var tbody = table.append("tbody");
 
