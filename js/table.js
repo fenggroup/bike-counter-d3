@@ -100,7 +100,8 @@ function createTable(data) {
 
     
     rows.append("td")
-        .text(d => d.label);
+        .text(d => d.label)
+        .style("font-weight", "bold");
     console.log("test 10");
 
     
