@@ -10,7 +10,7 @@ var timeSelection = "daily";
 var fileName = "./data/counter-data-resampled/counter-data-1day.csv";
 var weatherFileName = "weather-noaa-annarbor.csv";
 
-const innerWidth = width - margin.left - margin.right, 
+var innerWidth = width - margin.left - margin.right, 
       innerHeight = height - margin.top - margin.bottom;
 
 // append the svg to the chart
@@ -37,39 +37,11 @@ const parseDate = d3.timeParse("%Y-%m-%d");
 // convert a time back to a string
 const formatDate = d3.timeFormat("%Y-%m-%d");
 
-function updateChart(){
+function updateBarChart(){
 
   d3.selectAll("rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
 
-/*
-// for doing weather
-
-Promise.all([
-  d3.csv(fileName),
-  d3.csv(weatherFileName)
-  ]).then(function(data) {
-    if (fileName == "./data/counter-data-resampled/counter-data-1day.csv") {
-      var directionType = "northsouth";
-    }
-
-    var counterData = data[0];
-    var weatherData = data[1];
-
-    weatherData.forEach(function(e) {
-      e.parsedDateTimeWeather = 
-    }
-
-    // format the data
-    counterData.forEach(function(d) {
-      d.parsedDateTime = parseTime(d.date); // adjusts time reading for for 1hour/30min/15min csv
-      d.in = +d.in;
-      d.out = +d.out;
-      d.total = d.in + d.out;
-      d.precipitation = weatherData.find(function(e) {
-        return e.PRCP;
-      })
-    });
-  */
+  const color = direction === "both" ? "rgb(91, 121, 28)" : direction === "in" ? "rgb(106, 106, 246)" : "rgb(220, 183, 55)";
 
 // get the data
   d3.csv(fileName).then(function(data) {
@@ -180,10 +152,10 @@ Promise.all([
     }
 
     svg.selectAll("bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", function(d) {
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", function(d) {
           // moves the bars to start at the beginning of the month (this is because of how the csv is structured)
           if (timeSelection == "monthly") {
             return xScale(d3.timeMonth.floor(d.parsedDateTime));
@@ -220,61 +192,56 @@ Promise.all([
         return innerHeight - yScale(d.out);
       }
     })
-    .attr("fill", function(d) {
-      if (direction == "both") {
-        return "rgb(91, 121, 28)";
-      }
-      else if (direction == "in") {
-        return "rgb(106, 106, 246)";
-      }
-      else if (direction == "out") {
-        return  "rgb(220, 183, 55)";
-      }
-    })
-    .append("title")
-    .text(function(d) {
-      var tooltipText = "";
-      if (timeSelection == "daily" || timeSelection == "hourly" || 
-          timeSelection == "15min" || timeSelection == "30min") {
-        tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
-      }
-      else if (timeSelection == "weekly") {
-        tooltipText += "Week beginning on " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
-      }
-      else if (timeSelection == "monthly") {
-        tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "\n";
-      }
-      if (timeSelection == "hourly" || timeSelection == "30min" || timeSelection == "15min") {
-        tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "\n";
-      }
+    .attr("fill", color)
+    .on("mouseover", function(event, d) {
+      // Get the bar width and height
+      var barWidth = parseFloat(d3.select(this).attr("width"));
 
-      if (direction == "both") {
-        tooltipText += "Count: " + d.total;
-      }
-      else if (direction == "in") {
-        tooltipText += "Count: " + d.in;
-      }
-      else if (direction == "out") {
-        tooltipText += "Count: " + d.out;
-      }
+      // Get the bar's x/y values in the SVG
+      var barX = parseFloat(d3.select(this).attr("x"));
+      var barY = parseFloat(d3.select(this).attr("y"));
+    
+      // Set the tooltip text
+      d3.select("#tooltip")
+        .select("#tooltipText")
+        .text(tooltipText(d));
+    
+      // Temporarily show the tooltip to calculate its dimensions
+      d3.select("#tooltip").classed("hidden", false);
+    
+      // Get the tooltip height after setting the text
+      var tooltipHeight = d3.select("#tooltip").node().offsetHeight;
 
-      if (timeSelection == "daily") {
-        if (directionType = "northsouth" && direction == "both") {
-          tooltipText +=  "\nNorthbound: " + d.in;
-          tooltipText += "\nSouthbound: " + d.out;
-        }
-        else if (directionType = "eastwest" && direction == "both") {
-          tooltipText +=  "\nEastbound: " + d.in;
-          tooltipText += "\nWestbound: " + d.out;
-        }
-        tooltipText += "\nTemperature (F): ";
-        tooltipText += "\nPrecipitation: ";
-      }
+      // Calculate the tooltip's x and y position
+      var xPosition = barX + barWidth;
+      var yPosition = barY - (tooltipHeight / 2);
+    
+      // Convert the SVG coordinates to screen coordinates
+      var svg = d3.select("svg").node();
+      var svgRect = svg.getBoundingClientRect();
+      var tooltipCoords = {
+        x: svgRect.left + xPosition + margin.left + 5,
+        y: svgRect.top + yPosition + margin.top
+      };
+    
+      // Update the tooltip position
+      d3.select("#tooltip")
+        .style("left", tooltipCoords.x + "px")
+        .style("top", tooltipCoords.y + "px")
+        .style("background-color", color);
 
-      return tooltipText;
-    });
+      // d3.select("#tooltip::after")
+      //   .style("border-color", "transparent rgba(91,121,28,1.000) transparent transparent");
 
-      // add y axis
+      // Show the tooltip
+      d3.select("#tooltip").classed("hidden", false);
+    }) 
+  .on("mouseout", function() {
+      //Hide the tooltip
+      d3.select("#tooltip").classed("hidden", true);
+     });
+
+      // Add y axis
       svg.append("g")
         .attr("class", "y-axis")    
         .call(d3.axisLeft(yScale)
@@ -297,7 +264,7 @@ Promise.all([
         .call(d3.axisBottom(xScale));
       }
   });
-  // add x label
+  // Add x label
   svg.append("text")
     .attr("class", "axis-label")
     .attr("x", innerWidth/2)
@@ -314,64 +281,45 @@ Promise.all([
     .text("Count");
 }
 
-updateChart();
+function tooltipText(d) {
+  var tooltipText = "";
+  if (timeSelection == "daily" || timeSelection == "hourly" || 
+      timeSelection == "15min" || timeSelection == "30min") {
+    tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+  }
+  else if (timeSelection == "weekly") {
+    tooltipText += "Week beginning on " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+  }
+  else if (timeSelection == "monthly") {
+    tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "\n";
+  }
+  if (timeSelection == "hourly" || timeSelection == "30min" || timeSelection == "15min") {
+    tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "\n";
+  }
 
-// is called when a button is clicked
-d3.selectAll("input")
-  .on("click", function() {
+  if (direction == "both") {
+    tooltipText += "Count: " + d.total + "\n";
+  }
+  else if (direction == "in") {
+    tooltipText += "Count: " + d.in + "\n";
+  }
+  else if (direction == "out") {
+    tooltipText += "Count: " + d.out + "\n";
+  }
 
-    var view = d3.select(this).node().value;
-
-    switch (view) {
-      case "in":
-        direction = "in";
-        updateChart();
-        break;
-      
-      case "out":
-        direction = "out";
-        updateChart();
-        break;
-      
-      case "both":
-        direction = "both";
-        updateChart();
-        break;
-      
-      case "monthly":
-        fileName = "./data/counter-data-resampled/counter-data-1month.csv";
-        timeSelection = "monthly";
-        updateChart();
-        break;
-
-      case "weekly":
-        fileName = "./data/counter-data-resampled/counter-data-1week.csv";
-        timeSelection = "weekly";
-        updateChart();
-        break;
-
-      case "daily":
-        fileName = "./data/counter-data-resampled/counter-data-1day.csv";
-        timeSelection = "daily";
-        updateChart();
-        break;
-
-      case "hourly":
-        fileName = "./data/counter-data-resampled/counter-data-1hour.csv";
-        timeSelection = "hourly";
-        updateChart();
-        break;
-
-      case "30min":
-        fileName = "./data/counter-data-resampled/counter-data-30min.csv";
-        timeSelection = "30min";
-        updateChart();
-        break;
-
-      case "15min":
-        fileName = "./data/counter-data-resampled/counter-data-15min.csv";
-        timeSelection = "15min";
-        updateChart();
-        break;
+  if (timeSelection == "daily") {
+    if (directionType = "northsouth" && direction == "both") {
+      tooltipText +=  "Northbound: " + d.in  + "\n";
+      tooltipText += "Southbound: " + d.out + "\n";
     }
-});
+    else if (directionType = "eastwest" && direction == "both") {
+      tooltipText +=  "Eastbound: " + d.in + "\n";
+      tooltipText += "Westbound: " + d.out + "\n";
+    }
+    tooltipText += "Temperature (F): " + "\n";
+    tooltipText += "Precipitation: ";
+  }
+  return tooltipText;
+}
+
+updateBarChart();
