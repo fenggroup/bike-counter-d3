@@ -12,9 +12,8 @@ $('.input-daterange').datepicker({
     start_date = document.getElementsByName('start')[0].value;
     end_date = document.getElementsByName('end')[0].value;
 
-    updateChart();
-    console.log("exit from barchart");
-
+    updateBarChart();
     updateTable();
-    console.log("exit from table");
+    updateBoxPlotWeek();
+
 });
