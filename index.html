@@ -10,6 +10,55 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.standalone.min.css" integrity="sha512-p4vIrJ1mDmOVghNMM4YsWxm0ELMJ/T0IkdEvrkNHIcgFsSzDi/fV7YxzTzb3mnMvFPawuIyIrHcpxClauEfpQg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">
+        #tooltip {
+            position: absolute;
+            width: auto;
+            height: auto;
+            padding: 5px;
+            color: white;
+            border:1px;
+            border-style: solid;
+            border-width: 1px;
+            border-color:white;
+            pointer-events: none;
+            white-space: pre-line;
+            text-align: left;
+        }
+        
+        #tooltip.hidden {
+            display: none;
+        }
+        
+        #tooltip p {
+            margin: 0;
+            /*font-family: sans-serif;*/
+            font-size: 12px;
+            /*line-height: 20px; */
+        }
+
+        #tooltip::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        margin-top: -6px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent white transparent transparent;
+        }
+
+        #tooltip::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent black transparent transparent;
+        }
+    </style>
 </head>
 <body>
 
@@ -43,11 +92,18 @@
       
         <h2>Bike traffic by date & time</h2>
 
+        <div id="tooltip" class="hidden">
+            <p><span id="tooltipText">100</span></p>
+        </div>
         <div id="barchart"></div>
 
         <h2>Traffic summary on the selected dates</h2>
 
         <div id="table"></div>
+
+        <h2>Daily traffic by day of week</h2>
+
+        <div id="boxplot-weekday"></div>
 
 
 
@@ -56,7 +112,7 @@
     <script src="./js/datepicker.js"></script>
     <script src="./js/barchart.js"></script>
     <script src="./js/table.js"></script>
-
+    <script src="./js/boxplot-weekday.js"></script>
 
 </body>
 </html>
