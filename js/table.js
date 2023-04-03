@@ -1,8 +1,10 @@
 
-const oneDayFile = "./data/counter-data-resampled/counter-data-1day.csv";
+const oneDayFile = filePath + "counter-data-1day.csv";
 
 // create the initial table
 updateTable();
+var inDirection;
+var outDirection;
 
 // get the data
 function updateTable() {
@@ -42,18 +44,34 @@ function createTable(data) {
         out: totalTraffic.out / data.length
     };
 
-
     var percentTraffic = {
         both: 100,
         in: (totalTraffic.in / totalTraffic.both) * 100,
         out: (totalTraffic.out / totalTraffic.both) * 100
     };
 
-
+    let inDirection = "In";
+    let outDirection = "Out";
+    
+    if (directionType == "annarbor") {
+        inDirection = "Northbound";
+        outDirection = "Southbound";
+    }
+    else if (directionType == "dearborn") {
+        inDirection = "Eastbound";
+        outDirection = "Westbound";
+    }
+    
+    var summaryData = [
+        { label: "Both Directions", total: totalTraffic.both, average: averageDailyTraffic.both, percent: percentTraffic.both },
+        { label: inDirection, total: totalTraffic.in, average: averageDailyTraffic.in, percent: percentTraffic.in },
+        { label: outDirection, total: totalTraffic.out, average: averageDailyTraffic.out, percent: percentTraffic.out }
+    ];
+    
     var summaryData = [
         { label: "Both", total: totalTraffic.both, average: averageDailyTraffic.both, percent: percentTraffic.both },
-        { label: "In", total: totalTraffic.in, average: averageDailyTraffic.in, percent: percentTraffic.in },
-        { label: "Out", total: totalTraffic.out, average: averageDailyTraffic.out, percent: percentTraffic.out }
+        { label: inDirection, total: totalTraffic.in, average: averageDailyTraffic.in, percent: percentTraffic.in },
+        { label: outDirection, total: totalTraffic.out, average: averageDailyTraffic.out, percent: percentTraffic.out }
     ];
 
     var tableContainer = d3.select("#table")
