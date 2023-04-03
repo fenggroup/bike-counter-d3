@@ -67,12 +67,6 @@ function createTable(data) {
         { label: inDirection, total: totalTraffic.in, average: averageDailyTraffic.in, percent: percentTraffic.in },
         { label: outDirection, total: totalTraffic.out, average: averageDailyTraffic.out, percent: percentTraffic.out }
     ];
-    
-    var summaryData = [
-        { label: "Both", total: totalTraffic.both, average: averageDailyTraffic.both, percent: percentTraffic.both },
-        { label: inDirection, total: totalTraffic.in, average: averageDailyTraffic.in, percent: percentTraffic.in },
-        { label: outDirection, total: totalTraffic.out, average: averageDailyTraffic.out, percent: percentTraffic.out }
-    ];
 
     var tableContainer = d3.select("#table")
     
