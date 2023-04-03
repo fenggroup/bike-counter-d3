@@ -5,18 +5,20 @@ width = 800,
 innerWidth = width - margin.left - margin.right,
     innerHeight = height - margin.top - margin.bottom;
 
-// Group data by day of the week
-function groupDataByDayOfWeek(data) {
+// group data by day of the week
+function groupDataByDayOfWeek(data, start_date, end_date) {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const groupedData = weekDays.map(day => ({ day, values: [] }));
 
   data.forEach(d => {
-    const dayIndex = d.parsedDateTime.getDay();
-    const dayOfWeek = weekDays[dayIndex === 0 ? 6 : dayIndex - 1];
-    groupedData.find(group => group.day === dayOfWeek).values.push(d);
+    if (d.parsedDateTime >= start_date && d.parsedDateTime <= end_date) {
+      const dayIndex = d.parsedDateTime.getDay();
+      const dayOfWeek = weekDays[dayIndex === 0 ? 6 : dayIndex - 1];
+      groupedData.find(group => group.day === dayOfWeek).values.push(d);
+    }
   });
 
-  return groupedData;
+  return groupedData.filter(group => group.values.length > 0);
 }
 
 // draw boxplot
@@ -54,20 +56,21 @@ function drawBoxplot(groupedData) {
   groupedData.forEach((group, i) => {
     const x = xScale(group.day);
   
-    const boxData = group.values.map(d => {
-      if (direction === "both") return d.total;
-      if (direction === "in") return d.in;
-      if (direction === "out") return d.out;
-    });
-  
-    const quartiles = [0.25, 0.5, 0.75].map(q => d3.quantile(boxData.sort(d3.ascending), q));
-    const iqr = quartiles[2] - quartiles[0];
-    const whiskerMin = Math.max(d3.min(boxData), quartiles[0] - 1.5 * iqr);
-    const whiskerMax = Math.min(d3.max(boxData), quartiles[2] + 1.5 * iqr);
+  const boxData = group.values.map(d => {
+    console.log(d.total);
+    if (direction === "both") return d.total;
+    if (direction === "in") return d.in;
+    if (direction === "out") return d.out;
+  });
 
-    const color = direction === "both" ? "rgb(91, 121, 28)" : direction === "in" ? "rgb(106, 106, 246)" : "rgb(220, 183, 55)";
+  const quartiles = [0.25, 0.5, 0.75].map(q => d3.quantile(boxData.sort(d3.ascending), q));
+  const iqr = quartiles[2] - quartiles[0];
+  const whiskerMin = Math.max(d3.min(boxData), quartiles[0] - 1.5 * iqr);
+  const whiskerMax = Math.min(d3.max(boxData), quartiles[2] + 1.5 * iqr);
 
-    svg.append("rect")
+  const color = direction === "both" ? "rgb(91, 121, 28)" : direction === "in" ? "rgb(106, 106, 246)" : "rgb(220, 183, 55)";
+
+  svg.append("rect")
     .attr("x", x)
     .attr("y", yScale(quartiles[2]))
     .attr("width", boxWidth)
@@ -84,36 +87,49 @@ function drawBoxplot(groupedData) {
     .attr("stroke", color)
     .attr("stroke-width", 1);
 
-    // draw whisker minimum
-const whiskerEndWidth = boxWidth / 2;
-svg.append("line")
-  .attr("x1", x + boxWidth / 2 - whiskerEndWidth / 2)
-  .attr("x2", x + boxWidth / 2 + whiskerEndWidth / 2)
-  .attr("y1", yScale(whiskerMin))
-  .attr("y2", yScale(whiskerMin))
-  .attr("stroke", color)
-  .attr("stroke-width", 1);
-
-    // draw whisker maximum
+  // draw whisker minimum
+  const whiskerEndWidth = boxWidth / 2;
   svg.append("line")
-  .attr("x1", x + boxWidth / 2 - whiskerEndWidth / 2)
-  .attr("x2", x + boxWidth / 2 + whiskerEndWidth / 2)
-  .attr("y1", yScale(whiskerMax))
-  .attr("y2", yScale(whiskerMax))
-  .attr("stroke", color)
-  .attr("stroke-width", 1);
+    .attr("x1", x + boxWidth / 2 - whiskerEndWidth / 2)
+    .attr("x2", x + boxWidth / 2 + whiskerEndWidth / 2)
+    .attr("y1", yScale(whiskerMin))
+    .attr("y2", yScale(whiskerMin))
+    .attr("stroke", color)
+    .attr("stroke-width", 1);
 
-    // add dots for individual data points
-    svg.selectAll(`.dot-${i}`)
+  // draw whisker maximum
+  svg.append("line")
+    .attr("x1", x + boxWidth / 2 - whiskerEndWidth / 2)
+    .attr("x2", x + boxWidth / 2 + whiskerEndWidth / 2)
+    .attr("y1", yScale(whiskerMax))
+    .attr("y2", yScale(whiskerMax))
+    .attr("stroke", color)
+    .attr("stroke-width", 1);
+  
+  // draw median line
+  svg.append("line")
+    .attr("x1", x)
+    .attr("x2", x + boxWidth)
+    .attr("y1", yScale(quartiles[1]))
+    .attr("y2", yScale(quartiles[1]))
+    .attr("stroke", color)
+    .attr("stroke-width", 1);
+
+  // generate a random class for each boxplot group
+  const randomClass = `dot-${Math.random().toString(36).substring(2)}`;
+
+  // add dots for individual data points
+  svg.selectAll(`.dot-${i}`)
     .data(group.values)
     .join("circle")
-    .attr("class", `dot-${i}`)
-    .attr("cx", x + boxWidth / 2)
+    .attr("class", randomClass)
+    .attr("cx", d => x + (Math.random() * boxWidth))
     .attr("cy", d => yScale(direction === "both" ? d.total : direction === "in" ? d.in : d.out))
     .attr("r", 3)
     .attr("fill", color)
     .attr("opacity", 0.5);
 });
+
 
   // Add axes
   const xAxis = d3.axisBottom(xScale);
@@ -145,7 +161,7 @@ d3.csv(oneDayFile).then(function (data) {
       d.total = d.in + d.out;
     });
 
-    const groupedData = groupDataByDayOfWeek(data);
+    const groupedData = groupDataByDayOfWeek(data, parseDate(start_date), parseDate(end_date));
     drawBoxplot(groupedData);
 });
 
@@ -160,7 +176,7 @@ function updateBoxPlotWeek() {
         d.total = d.in + d.out;
       });
 
-      const groupedData = groupDataByDayOfWeek(data);
+      const groupedData = groupDataByDayOfWeek(data, parseDate(start_date), parseDate(end_date));
       drawBoxplot(groupedData);
   });
 }
@@ -214,37 +230,37 @@ d3.selectAll("input")
         break;
       
       case "monthly":
-        fileName = "./data/counter-data-resampled/counter-data-1month.csv";
+        fileName = filePath + "counter-data-1month.csv";
         timeSelection = "monthly";
         updateBarChart();
         break;
 
       case "weekly":
-        fileName = "./data/counter-data-resampled/counter-data-1week.csv";
+        fileName = "counter-data-1week.csv";
         timeSelection = "weekly";
         updateBarChart();
         break;
 
       case "daily":
-        fileName = "./data/counter-data-resampled/counter-data-1day.csv";
+        fileName = filePath + "counter-data-1day.csv";
         timeSelection = "daily";
         updateBarChart();
         break;
 
       case "hourly":
-        fileName = "./data/counter-data-resampled/counter-data-1hour.csv";
+        fileName = filePath + "counter-data-1hour.csv";
         timeSelection = "hourly";
         updateBarChart();
         break;
 
       case "30min":
-        fileName = "./data/counter-data-resampled/counter-data-30min.csv";
+        fileName = filePath + "counter-data-30min.csv";
         timeSelection = "30min";
         updateBarChart();
         break;
 
       case "15min":
-        fileName = "./data/counter-data-resampled/counter-data-15min.csv";
+        fileName = filePath + "counter-data-15min.csv";
         timeSelection = "15min";
         updateBarChart();
         break;
