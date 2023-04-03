@@ -4,11 +4,18 @@ var width = 800,
     margin = {top: 20, right: 50, bottom: 100, left: 60};
 
 // set default variables to what is loaded in
-
 var direction = "both";
 var timeSelection = "daily";
-var fileName = "./data/counter-data-resampled/counter-data-1day.csv";
+
+// change the filepath to alter ann arbor to dearborn
+var filePath = "./data/counter-data-resampled/annarbor-2022/"
+// var filePath = "./data/counter-data-resampled/dearborn-2022/"
+var fileName = filePath + "counter-data-1day.csv";
+
 var weatherFileName = "weather-noaa-annarbor.csv";
+//var weatherFileName = "weather-noaa-dearborn.csv";
+
+var directionType;
 
 var innerWidth = width - margin.left - margin.right, 
       innerHeight = height - margin.top - margin.bottom;
@@ -41,12 +48,19 @@ function updateBarChart(){
 
   d3.selectAll("rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
 
-  const color = direction === "both" ? "rgb(91, 121, 28)" : direction === "in" ? "rgb(106, 106, 246)" : "rgb(220, 183, 55)";
+  const color = 
+    direction === "both" ? "rgb(91, 121, 28)" : 
+    direction === "in" ? "rgb(106, 106, 246)" :
+     "rgb(220, 183, 55)"; // out
 
 // get the data
   d3.csv(fileName).then(function(data) {
-    if (fileName == "./data/counter-data-resampled/counter-data-1day.csv") {
-      var directionType = "northsouth";
+    console.log(fileName);
+    if (filePath == "./data/counter-data-resampled/annarbor-2022/") {
+      directionType = "annarbor";
+    }
+    else if (filePath == "./data/counter-data-resampled/dearborn-2022/") {
+      directionType = "dearborn";
     }
 
     // format the data

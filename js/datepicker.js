@@ -1,5 +1,12 @@
+// Ann Arbor
 let start_date = "2022-08-26", 
-    end_date = "2022-11-19";
+     end_date = "2022-11-19";
+
+/*
+// Dearborn
+let start_date = "2022-06-15", 
+    end_date = "2022-07-19";
+*/
 
 $('.input-daterange').datepicker({
     format: 'yyyy-mm-dd',
@@ -15,5 +22,6 @@ $('.input-daterange').datepicker({
     updateBarChart();
     updateTable();
     updateBoxPlotWeek();
-
+    updateBoxPlotHour();
+    
 });
