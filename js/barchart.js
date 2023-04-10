@@ -45,8 +45,7 @@ const parseDate = d3.timeParse("%Y-%m-%d");
 const formatDate = d3.timeFormat("%Y-%m-%d");
 
 function updateBarChart(){
-
-  d3.selectAll("rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
+  d3.selectAll("#barchart rect, .x-axis, .y-axis, .axis-label").remove();  // clear previous chart
 
   const color = 
     direction === "both" ? "rgb(91, 121, 28)" : 
