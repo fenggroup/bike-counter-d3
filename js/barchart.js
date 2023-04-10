@@ -217,7 +217,7 @@ function updateBarChart(){
       // Set the tooltip text
       d3.select("#tooltip")
         .select("#tooltipText")
-        .text(tooltipText(d));
+        .html(tooltipText(d));
     
       // Temporarily show the tooltip to calculate its dimensions
       d3.select("#tooltip").classed("hidden", false);
@@ -298,38 +298,38 @@ function tooltipText(d) {
   var tooltipText = "";
   if (timeSelection == "daily" || timeSelection == "hourly" || 
       timeSelection == "15min" || timeSelection == "30min") {
-    tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+    tooltipText += "Date: " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "<br>";
   }
   else if (timeSelection == "weekly") {
-    tooltipText += "Week beginning on " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "\n";
+    tooltipText += "Week beginning on " + d3.timeFormat("%b %d, %Y (%a)")(d.parsedDateTime) + "<br>";
   }
   else if (timeSelection == "monthly") {
-    tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "\n";
+    tooltipText += d3.timeFormat("%B %Y")(d.parsedDateTime) + "<br>";
   }
   if (timeSelection == "hourly" || timeSelection == "30min" || timeSelection == "15min") {
-    tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "\n";
+    tooltipText += "Time: " + d3.timeFormat("%I:%M %p")(d.parsedDateTime) + "<br>";
   }
 
   if (direction == "both") {
-    tooltipText += "Count: " + d.total + "\n";
+    tooltipText += "Count: " + d.total + "<br>";
   }
   else if (direction == "in") {
-    tooltipText += "Count: " + d.in + "\n";
+    tooltipText += "Count: " + d.in + "<br>";
   }
   else if (direction == "out") {
-    tooltipText += "Count: " + d.out + "\n";
+    tooltipText += "Count: " + d.out + "<br>";
   }
 
   if (timeSelection == "daily") {
     if (directionType = "northsouth" && direction == "both") {
-      tooltipText +=  "Northbound: " + d.in  + "\n";
-      tooltipText += "Southbound: " + d.out + "\n";
+      tooltipText +=  "Northbound: " + d.in  + "<br>";
+      tooltipText += "Southbound: " + d.out + "<br>";
     }
     else if (directionType = "eastwest" && direction == "both") {
-      tooltipText +=  "Eastbound: " + d.in + "\n";
-      tooltipText += "Westbound: " + d.out + "\n";
+      tooltipText +=  "Eastbound: " + d.in + "<br>";
+      tooltipText += "Westbound: " + d.out + "<br>";
     }
-    tooltipText += "Temperature (F): " + "\n";
+    tooltipText += "Temperature (F): " + "<br>";
     tooltipText += "Precipitation: ";
   }
   return tooltipText;

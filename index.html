@@ -15,15 +15,15 @@
             position: absolute;
             width: auto;
             height: auto;
-            padding: 5px;
+            padding: 5px 5px;
             color: white;
             border:1px;
             border-style: solid;
             border-width: 1px;
             border-color:white;
             pointer-events: none;
-            white-space: pre-line;
             text-align: left;
+            white-space: normal;
         }
         
         #tooltip.hidden {
@@ -31,10 +31,10 @@
         }
         
         #tooltip p {
-            margin: 0;
-            /*font-family: sans-serif;*/
+            margin-top: 0;
+            margin-bottom: 0;
             font-size: 12px;
-            /*line-height: 20px; */
+            line-height: 1;
         }
 
         #tooltip::before {
