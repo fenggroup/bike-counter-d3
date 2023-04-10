@@ -136,7 +136,9 @@ function drawBoxplot(groupedData) {
 
   svg.append("g")
     .attr("transform", `translate(0, ${innerHeight})`)
-    .call(xAxis);
+    .call(xAxis)
+    .selectAll("text")
+    .style("font-size", "16px"); 
 
   svg.append("g")
     .call(yAxis);
