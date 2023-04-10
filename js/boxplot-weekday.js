@@ -1,10 +1,3 @@
-width = 800,
-    height = 400,
-    margin = { top: 20, right: 50, bottom: 100, left: 60 };
-
-innerWidth = width - margin.left - margin.right,
-    innerHeight = height - margin.top - margin.bottom;
-
 // group data by day of the week
 function groupDataByDayOfWeek(data, start_date, end_date) {
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
