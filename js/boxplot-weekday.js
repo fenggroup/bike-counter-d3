@@ -57,7 +57,6 @@ function drawBoxplot(groupedData) {
     const x = xScale(group.day);
   
   const boxData = group.values.map(d => {
-    console.log(d.total);
     if (direction === "both") return d.total;
     if (direction === "in") return d.in;
     if (direction === "out") return d.out;
@@ -204,65 +203,3 @@ function updateBoxPlotWeek() {
 //     }
 //   });
 
-// is called when a button is clicked
-d3.selectAll("input")
-  .on("click", function() {
-
-    var view = d3.select(this).node().value;
-
-    switch (view) {
-      case "in":
-        direction = "in";
-        updateBarChart();
-        updateBoxPlotWeek();
-        break;
-      
-      case "out":
-        direction = "out";
-        updateBoxPlotWeek();
-        updateBarChart();
-        break;
-      
-      case "both":
-        direction = "both";
-        updateBarChart();
-        updateBoxPlotWeek();
-        break;
-      
-      case "monthly":
-        fileName = filePath + "counter-data-1month.csv";
-        timeSelection = "monthly";
-        updateBarChart();
-        break;
-
-      case "weekly":
-        fileName = "counter-data-1week.csv";
-        timeSelection = "weekly";
-        updateBarChart();
-        break;
-
-      case "daily":
-        fileName = filePath + "counter-data-1day.csv";
-        timeSelection = "daily";
-        updateBarChart();
-        break;
-
-      case "hourly":
-        fileName = filePath + "counter-data-1hour.csv";
-        timeSelection = "hourly";
-        updateBarChart();
-        break;
-
-      case "30min":
-        fileName = filePath + "counter-data-30min.csv";
-        timeSelection = "30min";
-        updateBarChart();
-        break;
-
-      case "15min":
-        fileName = filePath + "counter-data-15min.csv";
-        timeSelection = "15min";
-        updateBarChart();
-        break;
-    }
-});
