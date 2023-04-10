@@ -12,7 +12,7 @@ d3.selectAll("input")
         break;
 
       case "weekly":
-        fileName = "counter-data-1week.csv";
+        fileName = filePath + "counter-data-1week.csv";
         timeSelection = "weekly";
         updateBarChart();
         break;
@@ -40,7 +40,7 @@ d3.selectAll("input")
         timeSelection = "15min";
         updateBarChart();
         break;
-        
+
       case "in":
         direction = "in";
         updateBarChart();
