@@ -149,7 +149,9 @@ const boxWidth = xScale.bandwidth();
   });
 
   // add axes
-  const xAxis = d3.axisBottom(xScale).tickFormat(d => d + ":00");
+  const xAxis = d3.axisBottom(xScale).tickFormat(d => {
+    return d === 0 ? "12AM" : d === 12 ? "12PM" : d % 12;
+  });  
   const yAxis = d3.axisLeft(yScale);
 
   svg.append("g")
