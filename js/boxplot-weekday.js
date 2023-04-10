@@ -122,9 +122,9 @@ function drawBoxplot(groupedData) {
     .data(group.values)
     .join("circle")
     .attr("class", randomClass)
-    .attr("cx", d => x + (Math.random() * boxWidth))
+    .attr("cx", d => x + (boxWidth * 0.2) + (Math.random() * boxWidth * 0.6)) // modified jitter
     .attr("cy", d => yScale(direction === "both" ? d.total : direction === "in" ? d.in : d.out))
-    .attr("r", 3)
+    .attr("r", 6)
     .attr("fill", color)
     .attr("opacity", 0.5);
 });
@@ -179,27 +179,3 @@ function updateBoxPlotWeek() {
       drawBoxplot(groupedData);
   });
 }
-
-// // update chart when input is changed
-// d3.selectAll("input")
-//   .on("click", function () {
-//     const view = d3.select(this).node().value;
-
-//     switch (view) {
-//       case "in":
-//         direction = "in";
-//         updateBoxPlotWeek();
-//         break;
-
-//       case "out":
-//         direction = "out";
-//         updateBoxPlotWeek();
-//         break;
-
-//       case "both":
-//         direction = "both";
-//         updateBoxPlotWeek();
-//         break;
-//     }
-//   });
-
