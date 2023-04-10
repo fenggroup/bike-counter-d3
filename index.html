@@ -58,6 +58,10 @@
             border-style: solid;
             border-color: transparent black transparent transparent;
         }
+
+        .form-spacing {
+            margin-top: 7px;
+        }
     </style>
 </head>
 <body>
@@ -73,14 +77,14 @@
             <input type="text" class="input-sm form-control" name="end" value="2022-11-19"/>
         </div>
     
-        <form>
+        <form class="form-spacing">
             Traffic direction: 
             <label><input type="radio" name="filterPreset" value="both" checked="true"> Both</label>
             <label><input type="radio" name="filterPreset" value="in"> Northbound only</label>
             <label><input type="radio" name="filterPreset" value="out"> Southbound only</label>
         </form>
 
-        <form>
+        <form class="form-spacing">
             Select data resolution: 
             <label></label><input type="radio" name="filterPreset" value="monthly"> monthly</label>
             <label></label><input type="radio" name="filterPreset" value="weekly"> weekly</label>
