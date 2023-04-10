@@ -77,7 +77,8 @@ function createTable(data) {
         .style("width", 500 + "px")
         .style("height", 120 + "px")
         .style("border", "1px solid black")
-        .style("padding", "5px");
+        .style("padding", "5px")
+        .attr("class", "table-padding-bottom");
 
     var thead = table.append("thead");
     var tbody = table.append("tbody");
