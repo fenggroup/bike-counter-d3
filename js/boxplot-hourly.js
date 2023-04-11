@@ -141,17 +141,17 @@ const boxWidth = xScale.bandwidth();
       .data(group.values)
       .join("circle")
       .attr("class", `dot-${i}`)
-      .attr("cx", x + boxWidth / 2)
+      .attr("cx", d => x + (boxWidth * 0.2) + (Math.random() * boxWidth * 0.6)) // modified jitter
       .attr("cy", d => yScale(direction === "both" ? d.total : direction === "in" ? d.in : d.out))
       .attr("r", 3)
       .attr("fill", color)
-      .attr("opacity", 0.5);  
+      .attr("opacity", 0.4);  
   });
 
   // add axes
   const xAxis = d3.axisBottom(xScale).tickFormat(d => {
     return d === 0 ? "12AM" : d === 12 ? "12PM" : d % 12;
-  });  
+  });
   const yAxis = d3.axisLeft(yScale);
 
   svg.append("g")
